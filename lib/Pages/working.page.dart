@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:vaudience/Components/header.dart';
+import 'package:vaudience/Components/quote.dart';
 import 'package:vaudience/Pages/done.page.dart';
 import 'package:vaudience/models/session.model.dart';
 
@@ -134,6 +135,7 @@ class _WorkingPageState extends State<WorkingPage> {
                 button(context, Icons.stop, stopSession)
               ],
             ),
+            QuoteComponent()
           ],
         ),
       ),

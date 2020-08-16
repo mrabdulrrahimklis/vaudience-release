@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:vaudience/Components/header.dart';
+import 'package:vaudience/Components/quote.dart';
 import 'package:vaudience/Pages/working.page.dart';
 import 'package:vaudience/Services/getdata.service.dart';
 
@@ -9,12 +10,7 @@ class ConfigurationPage extends StatefulWidget {
   _ConfigurationPageState createState() => _ConfigurationPageState();
 }
 
-Text loadQuote(snapshot) {
-  return Text(
-    snapshot.data == null ? '' : snapshot.data,
-    style: TextStyle(fontSize: 28.0),
-  );
-}
+
 
 class _ConfigurationPageState extends State<ConfigurationPage> {
   final _formKey = GlobalKey<FormState>();
@@ -59,14 +55,7 @@ class _ConfigurationPageState extends State<ConfigurationPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                FutureBuilder(
-                  future: fetchQuote(),
-                  builder: (context, snapshot) {
-                    return loadQuote(snapshot) == null
-                        ? 'Loading...'
-                        : loadQuote(snapshot);
-                  },
-                ),
+                QuoteComponent(),
                 Divider(
                   height: 120.0,
                 ),
