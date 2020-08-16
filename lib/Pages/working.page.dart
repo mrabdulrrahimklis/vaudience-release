@@ -90,9 +90,10 @@ class _WorkingPageState extends State<WorkingPage> {
 
   stopSession() {
     setState(() {
-      _timer.cancel();
       widget.nextSession = 0;
-      _counter = this.data[widget.nextSession]['time'];
+      _counter = this.data[0]['time'];
+      _timer.cancel();
+      isWorking = true;
     });
   }
 
