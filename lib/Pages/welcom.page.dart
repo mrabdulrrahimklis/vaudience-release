@@ -11,7 +11,7 @@ class _WelcomePage extends State<WelcomePage> {
   void initState() {
     super.initState();
     new Future.delayed(
-      const Duration(seconds: 2),
+      const Duration(seconds: 3),
       () => Navigator.push(
         context,
         MaterialPageRoute(
