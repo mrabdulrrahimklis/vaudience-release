@@ -46,10 +46,8 @@ class _WorkingPageState extends State<WorkingPage> {
             _counter--;
           } else if(widget.nextSession <= widget.numberOfSessions) {
             widget.nextSession++;
-            print("123");
             _counter = this.data[widget.nextSession]['time'];
             if(widget.numberOfSessions - widget.nextSession == 1) {
-              print("123");
               _timer.cancel();
               Navigator.push(
                 context,
@@ -71,15 +69,18 @@ class _WorkingPageState extends State<WorkingPage> {
     _startTimer();
   }
 
-  restartSession() {
-    _timer.cancel();
-    _counter = 0;
-    Navigator.of(context).pop();
+  stopSession() {
+    setState(() {
+      _timer.cancel();
+      widget.nextSession = 0;
+      _counter = this.data[widget.nextSession]['time'];
+    });
   }
 
   @override
   initState() {
     super.initState();
+    // just bad way to mock data I will save that on DB for each user
     for (int i = 0; i < int.parse(widget.trainingIntervals); i++) {
       this.data.add({
         'color': Colors.green,
@@ -98,6 +99,34 @@ class _WorkingPageState extends State<WorkingPage> {
     }
     widget.numberOfSessions = this.data.length;
     _counter = this.data[widget.nextSession]['time'];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: header(
+        context,
+        titleText: "Keep working",
+        backButton: true,
+      ),
+      body: Center(
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            statusAndCountdown(context, this.data[widget.nextSession]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                isWorking == false
+                    ? button(context, Icons.pause, startStopSession)
+                    : button(context, Icons.play_arrow, startStopSession),
+                button(context, Icons.stop, stopSession)
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Padding currentStageOfTraining(context, currentSession) {
@@ -120,34 +149,6 @@ class _WorkingPageState extends State<WorkingPage> {
             "${currentSession['working'] + " " + currentSession['count'].toString()}",
             style: TextStyle(color: Colors.white, fontSize: 30.0),
           ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: header(
-        context,
-        titleText: "Keep working",
-        backButton: true,
-      ),
-      body: Center(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            statusAndCountdown(context, this.data[widget.nextSession]),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                isWorking == false
-                    ? button(context, Icons.pause, startStopSession)
-                    : button(context, Icons.play_arrow, startStopSession),
-                button(context, Icons.stop, restartSession)
-              ],
-            ),
-          ],
         ),
       ),
     );
