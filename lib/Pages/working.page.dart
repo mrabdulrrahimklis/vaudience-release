@@ -9,7 +9,6 @@ class WorkingPage extends StatefulWidget {
   String durationTimeInterval;
   String durationBreakInterval;
   int nextSession = 0;
-  Duration currentSessionTime;
   int numberOfSessions;
 
   WorkingPage({
@@ -23,18 +22,16 @@ class WorkingPage extends StatefulWidget {
 }
 
 class _WorkingPageState extends State<WorkingPage> {
-  List data = [];
   Timer _timer;
-  int _counter;
-  bool isPaused = false;
-  int pausedTime;
+  List data = [];
   bool isWorking;
+  int _counter;
+  int pausedTime;
 
   @override
   initState() {
     super.initState();
-    // just bad way to mock data I will save that on DB for each user
-    for (int i = 0; i < int.parse(widget.trainingIntervals); i++) {
+    for (int i = 0; i < int.parse(widget.trainingIntervals); i++) { // bad way to mock data
       this.data.add({
         'color': Colors.green,
         'duration': Duration(minutes: int.parse(widget.durationTimeInterval)),
@@ -58,13 +55,11 @@ class _WorkingPageState extends State<WorkingPage> {
     if(_timer != null) {
       _timer.cancel();
       _timer = null;
-      isPaused = true;
       pausedTime = _counter;
       isWorking = true;
     } else {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
-          isPaused = false;
           isWorking = false;
           if(_counter > 0) {
             _counter--;
@@ -113,7 +108,8 @@ class _WorkingPageState extends State<WorkingPage> {
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
-            statusAndCountdown(context, this.data[widget.nextSession]),
+            currentStageOfTraining(context, this.data[widget.nextSession]),
+            countdownTtime(context, this.data[widget.nextSession]),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -169,21 +165,12 @@ class _WorkingPageState extends State<WorkingPage> {
       child: Container(
         alignment: Alignment.center,
         child: Text(
-          isPaused == false ? timeToMinutesSeconds(_counter) : timeToMinutesSeconds(pausedTime),
+          isWorking == false ? timeToMinutesSeconds(_counter) : timeToMinutesSeconds(pausedTime),
           style: TextStyle(
             fontSize: 50,
           ),
         ),
       ),
-    );
-  }
-
-  Column statusAndCountdown(context, data) {
-    return Column(
-      children: <Widget>[
-        currentStageOfTraining(context, data),
-        countdownTtime(context, data)
-      ],
     );
   }
 
