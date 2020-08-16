@@ -7,11 +7,5 @@ class Session {
   int count;
   String working;
 
-  Session(
-      this.color,
-      this.duration,
-      this.time,
-      this.count,
-      this.working,
-      );
+  Session(this.color, this.duration, this.time, this.count, this.working);
 }
