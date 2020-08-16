@@ -124,6 +124,7 @@ class _WorkingPageState extends State<WorkingPage> {
         child: ListView(
           shrinkWrap: true,
           children: <Widget>[
+            QuoteComponent(),
             currentStageOfTraining(context, this.data[widget.nextSession]),
             countdownTtime(context, this.data[widget.nextSession]),
             Row(
@@ -135,7 +136,6 @@ class _WorkingPageState extends State<WorkingPage> {
                 button(context, Icons.stop, stopSession)
               ],
             ),
-            QuoteComponent()
           ],
         ),
       ),
