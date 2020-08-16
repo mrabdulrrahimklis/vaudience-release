@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:vaudience/Components/header.dart';
 import 'package:vaudience/Pages/done.page.dart';
+import 'package:vaudience/models/session.model.dart';
 
 class WorkingPage extends StatefulWidget {
   String trainingIntervals;
@@ -33,27 +34,39 @@ class _WorkingPageState extends State<WorkingPage> {
     super.initState();
     // bad way to mock data
     for (int i = 0; i < int.parse(widget.trainingIntervals); i++) {
-      this.data.add({
-        'color': Colors.green,
-        'duration': Duration(minutes: int.parse(widget.durationTimeInterval)),
-        'time': int.parse(widget.durationTimeInterval) * 60,
-        'count': i + 1,
-        'working': 'Working'
-      });
-      this.data.add({
-        'color': Colors.red,
-        'duration': Duration(minutes: int.parse(widget.durationBreakInterval)),
-        'time': int.parse(widget.durationBreakInterval) * 60,
-        'count': i + 1,
-        'working': 'Break'
-      });
+      var sessionNumber = i + 1;
+      int timeInterval = int.parse(widget.durationTimeInterval) * 60;
+      int breakInterval = int.parse(widget.durationBreakInterval) * 60;
+      Duration durationTimeInterval =
+          Duration(minutes: int.parse(widget.durationTimeInterval));
+      Duration durationBreakInterval =
+          Duration(minutes: int.parse(widget.durationBreakInterval));
+
+      Session sessionWorking = new Session(
+        Colors.green,
+        durationTimeInterval,
+        timeInterval,
+        sessionNumber,
+        'Working',
+      );
+
+      Session sessionBreak = new Session(
+        Colors.red,
+        durationBreakInterval,
+        breakInterval,
+        sessionNumber,
+        'Break',
+      );
+
+      this.data.add(sessionWorking);
+      this.data.add(sessionBreak);
     }
     widget.numberOfSessions = this.data.length;
-    _counter = this.data[widget.nextSession]['time'];
+    _counter = this.data[widget.nextSession].time;
   }
 
   void _startTimer() {
-    if(_timer != null) {
+    if (_timer != null) {
       _timer.cancel();
       _timer = null;
       pausedTime = _counter;
@@ -62,12 +75,12 @@ class _WorkingPageState extends State<WorkingPage> {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
           isWorking = false;
-          if(_counter > 0) {
+          if (_counter > 0) {
             _counter--;
-          } else if(widget.nextSession <= widget.numberOfSessions) {
+          } else if (widget.nextSession <= widget.numberOfSessions) {
             widget.nextSession++;
-            _counter = this.data[widget.nextSession]['time'];
-            if(widget.numberOfSessions - widget.nextSession == 1) {
+            _counter = this.data[widget.nextSession].time;
+            if (widget.numberOfSessions - widget.nextSession == 1) {
               _timer.cancel();
               Navigator.push(
                 context,
@@ -92,7 +105,7 @@ class _WorkingPageState extends State<WorkingPage> {
   stopSession() {
     setState(() {
       widget.nextSession = 0;
-      _counter = this.data[0]['time'];
+      _counter = this.data[0].time;
       _timer.cancel();
       isWorking = true;
     });
@@ -127,7 +140,7 @@ class _WorkingPageState extends State<WorkingPage> {
     );
   }
 
-  Padding currentStageOfTraining(context, currentSession) {
+  Padding currentStageOfTraining(context, Session currentSession) {
     return Padding(
       padding: EdgeInsets.only(
         top: 20,
@@ -138,13 +151,13 @@ class _WorkingPageState extends State<WorkingPage> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: currentSession['color'],
+          color: currentSession.color,
         ),
         alignment: Alignment.center,
         child: Padding(
           padding: EdgeInsets.all(20),
           child: Text(
-            "${currentSession['working'] + " " + currentSession['count'].toString()}",
+            "${currentSession.working + " " + currentSession.count.toString()}",
             style: TextStyle(color: Colors.white, fontSize: 30.0),
           ),
         ),
@@ -153,7 +166,7 @@ class _WorkingPageState extends State<WorkingPage> {
   }
 
   timeToMinutesSeconds(time) {
-    return "${((time != null ? time~/60: '') ).toString()} : ${(time != null ?( time % 60).toInt(): '').toString()}";
+    return "${((time != null ? time ~/ 60 : '')).toString()} : ${(time != null ? (time % 60).toInt() : '').toString()}";
   }
 
   Padding countdownTtime(context, data) {
@@ -167,7 +180,9 @@ class _WorkingPageState extends State<WorkingPage> {
       child: Container(
         alignment: Alignment.center,
         child: Text(
-          isWorking == false ? timeToMinutesSeconds(_counter) : timeToMinutesSeconds(pausedTime),
+          isWorking == false
+              ? timeToMinutesSeconds(_counter)
+              : timeToMinutesSeconds(pausedTime),
           style: TextStyle(
             fontSize: 50,
           ),
