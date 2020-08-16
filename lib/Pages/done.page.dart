@@ -14,10 +14,15 @@ class _DonePageState extends State<DonePage> {
       appBar: header(context, titleText: 'Congratulations'),
       body: Container(
         decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Theme.of(context).primaryColor,
-          Theme.of(context).accentColor,
-        ], begin: FractionalOffset(0.3, 0.1), end: FractionalOffset(0.5, 0.6))),
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).primaryColor,
+              Theme.of(context).accentColor,
+            ],
+            begin: FractionalOffset(0.5, 0.6),
+            end: FractionalOffset(0.3, 0.1),
+          ),
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
