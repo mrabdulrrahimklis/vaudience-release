@@ -45,14 +45,14 @@ class _WorkingPageState extends State<WorkingPage> {
   bool isWorking;
 
   void _startTimer(sessionDuration) {
-    _counter = sessionDuration * 60;
+    _counter = sessionDuration;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if(_counter > 0) {
           _counter--;
         } else if(widget.nextSession <= widget.numberOfSessions) {
           widget.nextSession++;
-          _counter = sessionDuration * 60;
+          _counter = sessionDuration;
            if(widget.numberOfSessions - widget.nextSession == 1) {
             _timer.cancel();
             Navigator.push(
@@ -67,7 +67,8 @@ class _WorkingPageState extends State<WorkingPage> {
     });
   }
 
-  startSession(time) {
+  startSession() {
+    var time = this.data[widget.nextSession]['time'];
     setState(() {
       isWorking = false;
     });
@@ -95,14 +96,14 @@ class _WorkingPageState extends State<WorkingPage> {
       this.data.add({
         'color': Colors.green,
         'duration': Duration(minutes: int.parse(widget.durationTimeInterval)),
-        'time': int.parse(widget.durationTimeInterval),
+        'time': int.parse(widget.durationTimeInterval) * 60,
         'count': i + 1,
         'working': 'Working'
       });
       this.data.add({
         'color': Colors.red,
         'duration': Duration(minutes: int.parse(widget.durationBreakInterval)),
-        'time': int.parse(widget.durationBreakInterval),
+        'time': int.parse(widget.durationBreakInterval) * 60,
         'count': i + 1,
         'working': 'Break'
       });
@@ -154,7 +155,7 @@ class _WorkingPageState extends State<WorkingPage> {
               children: <Widget>[
                 isWorking == false
                     ? button(context, Icons.pause, stopSession)
-                    : button(context, Icons.play_arrow, startSession(this.data[widget.nextSession]['time'])),
+                    : button(context, Icons.play_arrow, startSession),
                 button(context, Icons.stop, restartSession)
               ],
             ),
