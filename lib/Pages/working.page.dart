@@ -25,7 +25,7 @@ class WorkingPage extends StatefulWidget {
 
 class _WorkingPageState extends State<WorkingPage> {
   Timer _timer;
-  List data = [];
+  List<Session> data = [];
   bool isWorking;
   int _counter;
   int pausedTime;
@@ -49,7 +49,7 @@ class _WorkingPageState extends State<WorkingPage> {
           sessionNumber, 'Break'));
     }
     widget.numberOfSessions = this.data.length;
-    _counter = this.data[widget.nextSession]['time'];
+    _counter = this.data[widget.nextSession].time;
   }
 
   void _startTimer() {
@@ -66,7 +66,7 @@ class _WorkingPageState extends State<WorkingPage> {
             _counter--;
           } else if (widget.nextSession <= widget.numberOfSessions) {
             widget.nextSession++;
-            _counter = this.data[widget.nextSession]['time'];
+            _counter = this.data[widget.nextSession].time;
             if (widget.numberOfSessions - widget.nextSession == 1) {
               _timer.cancel();
               Navigator.push(
@@ -92,7 +92,7 @@ class _WorkingPageState extends State<WorkingPage> {
   stopSession() {
     setState(() {
       widget.nextSession = 0;
-      _counter = this.data[0]['time'];
+      _counter = this.data[0].time;
       _timer.cancel();
       isWorking = true;
     });
