@@ -31,7 +31,8 @@ class _WorkingPageState extends State<WorkingPage> {
   @override
   initState() {
     super.initState();
-    for (int i = 0; i < int.parse(widget.trainingIntervals); i++) { // bad way to mock data
+    // bad way to mock data
+    for (int i = 0; i < int.parse(widget.trainingIntervals); i++) {
       this.data.add({
         'color': Colors.green,
         'duration': Duration(minutes: int.parse(widget.durationTimeInterval)),

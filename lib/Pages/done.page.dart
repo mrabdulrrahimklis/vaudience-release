@@ -30,8 +30,9 @@ class _DonePageState extends State<DonePage> {
               Text(
                 'DONE',
                 style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.2,
-                    color: Colors.blueGrey),
+                  fontSize: MediaQuery.of(context).size.width * 0.2,
+                  color: Colors.white,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
