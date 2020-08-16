@@ -22,20 +22,6 @@ class WorkingPage extends StatefulWidget {
   _WorkingPageState createState() => _WorkingPageState();
 }
 
-Padding button(context, icon, function) {
-  return Padding(
-    padding: EdgeInsets.all(30),
-    child: IconButton(
-      onPressed: function,
-      icon: Icon(
-        icon,
-        size: 55.0,
-        color: Theme.of(context).primaryColor,
-      ),
-    ),
-  );
-}
-
 class _WorkingPageState extends State<WorkingPage> {
   List data = [];
   Timer _timer;
@@ -44,35 +30,45 @@ class _WorkingPageState extends State<WorkingPage> {
   int pausedTime;
   bool isWorking;
 
-  void _startTimer(sessionDuration) {
-    _counter = sessionDuration;
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
-        if(_counter > 0) {
-          _counter--;
-        } else if(widget.nextSession <= widget.numberOfSessions) {
-          widget.nextSession++;
-          _counter = sessionDuration;
-           if(widget.numberOfSessions - widget.nextSession == 1) {
-            _timer.cancel();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DonePage(),
-              ),
-            );
+  void _startTimer() {
+    if(_timer != null) {
+      _timer.cancel();
+      _timer = null;
+      isPaused = true;
+      pausedTime = _counter;
+      isWorking = true;
+    } else {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        setState(() {
+          isPaused = false;
+          isWorking = false;
+          if(_counter > 0) {
+            _counter--;
+          } else if(widget.nextSession <= widget.numberOfSessions) {
+            widget.nextSession++;
+            print("123");
+            _counter = this.data[widget.nextSession]['time'];
+            if(widget.numberOfSessions - widget.nextSession == 1) {
+              print("123");
+              _timer.cancel();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DonePage(),
+                ),
+              );
+            }
           }
-        }
+        });
       });
-    });
+    }
   }
 
   startSession() {
-    var time = this.data[widget.nextSession]['time'];
     setState(() {
       isWorking = false;
     });
-    _startTimer(time);
+    _startTimer();
   }
 
   restartSession() {
@@ -92,6 +88,7 @@ class _WorkingPageState extends State<WorkingPage> {
 
   @override
   initState() {
+    super.initState();
     for (int i = 0; i < int.parse(widget.trainingIntervals); i++) {
       this.data.add({
         'color': Colors.green,
@@ -109,7 +106,7 @@ class _WorkingPageState extends State<WorkingPage> {
       });
     }
     widget.numberOfSessions = this.data.length;
-    super.initState();
+    _counter = this.data[widget.nextSession]['time'];
   }
 
   Padding currentStageOfTraining(context, currentSession) {
@@ -154,7 +151,7 @@ class _WorkingPageState extends State<WorkingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 isWorking == false
-                    ? button(context, Icons.pause, stopSession)
+                    ? button(context, Icons.pause, startSession)
                     : button(context, Icons.play_arrow, startSession),
                 button(context, Icons.stop, restartSession)
               ],
@@ -198,4 +195,17 @@ class _WorkingPageState extends State<WorkingPage> {
     );
   }
 
+  Padding button(context, icon, function) {
+    return Padding(
+      padding: EdgeInsets.all(30),
+      child: IconButton(
+        onPressed: function,
+        icon: Icon(
+          icon,
+          size: 55.0,
+          color: Theme.of(context).primaryColor,
+        ),
+      ),
+    );
+  }
 }
