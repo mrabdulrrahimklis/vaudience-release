@@ -64,7 +64,7 @@ class _WorkingPageState extends State<WorkingPage> {
     }
   }
 
-  startSession() {
+  startStopSession() {
     setState(() {
       isWorking = false;
     });
@@ -75,15 +75,6 @@ class _WorkingPageState extends State<WorkingPage> {
     _timer.cancel();
     _counter = 0;
     Navigator.of(context).pop();
-  }
-
-  stopSession() {
-    setState(() {
-      isWorking = true;
-      isPaused = true;
-      pausedTime = _counter;
-      _timer.cancel();
-    });
   }
 
   @override
@@ -151,8 +142,8 @@ class _WorkingPageState extends State<WorkingPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 isWorking == false
-                    ? button(context, Icons.pause, startSession)
-                    : button(context, Icons.play_arrow, startSession),
+                    ? button(context, Icons.pause, startStopSession)
+                    : button(context, Icons.play_arrow, startStopSession),
                 button(context, Icons.stop, restartSession)
               ],
             ),
