@@ -30,6 +30,30 @@ class _WorkingPageState extends State<WorkingPage> {
   int pausedTime;
   bool isWorking;
 
+  @override
+  initState() {
+    super.initState();
+    // just bad way to mock data I will save that on DB for each user
+    for (int i = 0; i < int.parse(widget.trainingIntervals); i++) {
+      this.data.add({
+        'color': Colors.green,
+        'duration': Duration(minutes: int.parse(widget.durationTimeInterval)),
+        'time': int.parse(widget.durationTimeInterval) * 60,
+        'count': i + 1,
+        'working': 'Working'
+      });
+      this.data.add({
+        'color': Colors.red,
+        'duration': Duration(minutes: int.parse(widget.durationBreakInterval)),
+        'time': int.parse(widget.durationBreakInterval) * 60,
+        'count': i + 1,
+        'working': 'Break'
+      });
+    }
+    widget.numberOfSessions = this.data.length;
+    _counter = this.data[widget.nextSession]['time'];
+  }
+
   void _startTimer() {
     if(_timer != null) {
       _timer.cancel();
@@ -75,30 +99,6 @@ class _WorkingPageState extends State<WorkingPage> {
       widget.nextSession = 0;
       _counter = this.data[widget.nextSession]['time'];
     });
-  }
-
-  @override
-  initState() {
-    super.initState();
-    // just bad way to mock data I will save that on DB for each user
-    for (int i = 0; i < int.parse(widget.trainingIntervals); i++) {
-      this.data.add({
-        'color': Colors.green,
-        'duration': Duration(minutes: int.parse(widget.durationTimeInterval)),
-        'time': int.parse(widget.durationTimeInterval) * 60,
-        'count': i + 1,
-        'working': 'Working'
-      });
-      this.data.add({
-        'color': Colors.red,
-        'duration': Duration(minutes: int.parse(widget.durationBreakInterval)),
-        'time': int.parse(widget.durationBreakInterval) * 60,
-        'count': i + 1,
-        'working': 'Break'
-      });
-    }
-    widget.numberOfSessions = this.data.length;
-    _counter = this.data[widget.nextSession]['time'];
   }
 
   @override
